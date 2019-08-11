@@ -12,7 +12,8 @@ namespace FluentResult.Core
 
     public bool IsSuccess => !IsFailure;
 
-    public string Error { get; }
+    public string Error { get;}
+    
 
     private readonly T _value;
 
@@ -30,7 +31,7 @@ namespace FluentResult.Core
     [DebuggerStepThrough]
     internal Result(bool isFailure, T value, string error)
     {
-      this.IsFailure = isFailure; 
+      this.IsFailure = isFailure;
       _value = value;
       this.Error = error;
     }

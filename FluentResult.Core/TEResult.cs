@@ -8,9 +8,9 @@ namespace FluentResult.Core
 {
   public partial struct Result<TValue, EError> : IResult
   {
-    public bool IsFailure => throw new NotImplementedException();
+    public bool IsFailure { get; }
 
-    public bool IsSuccess => throw new NotImplementedException();
+    public bool IsSuccess => !IsFailure;
 
     public EError Error;
 
@@ -23,7 +23,7 @@ namespace FluentResult.Core
       get
       {
         if (!IsSuccess)
-          throw new ArgumentException("item is not a failure");
+          throw new ArgumentException("Cannot access value when operation has state 'failure'");
 
         return _value;
       }
@@ -32,7 +32,8 @@ namespace FluentResult.Core
     [DebuggerStepThrough]
     internal Result(bool isFailure, TValue value, EError error)
     {
-      _value = value;
+      IsFailure  = isFailure;
+      _value     = value;
       this.Error = error;
     }
 

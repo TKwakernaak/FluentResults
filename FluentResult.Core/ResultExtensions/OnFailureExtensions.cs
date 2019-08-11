@@ -58,6 +58,15 @@ namespace FluentResult.Core.ResultExtensions
       return result;
     }
 
+    public static Result<T> WithError<T>(this Result<T> result, Action<Result<T>> errorResult)
+    {
+      if (result.IsFailure)
+        errorResult(result);
+
+      return result;
+
+    }
+
     public static Result OnFailure(this Result result, Action<string> action)
     {
       if (result.IsFailure)

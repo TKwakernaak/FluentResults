@@ -5,7 +5,7 @@ using System;
 namespace FluentResult.Core.Tests
 {
   [TestClass]
-  public class UnitTest1
+  public class OnSuccessTests
   {
     [TestMethod]
     public void SomeTestMethod_Succes()
@@ -18,20 +18,38 @@ namespace FluentResult.Core.Tests
             .OnFailure(() => Console.WriteLine("Failure"))
             .OnFailure(e => Console.WriteLine(result.Error));
 
-      Console.WriteLine("end of test");
+    Console.WriteLine("end of test");
     }
 
 
     [TestMethod]
     public void SomeTestMethod_Failure()
     {
+      string error;
       var result = Result.Fail<testType>("yo men, what the fuck happened?");
 
       result.Ensure(e => e.intValue == 5, "String must be 1")
             .OnSuccess(e => e.intValue = 2)
             .OnSuccess(() => Console.WriteLine("Success"))
-            .OnFailure(() => Console.WriteLine("Failure"))
-            .OnFailure(e => Console.WriteLine(result.Error));
+            .WithError(e => error = e.Error.ToString());
+
+
+
+
+      Assert.AreEqual(result.Error, "yo men, what the fuck happened?");
+
+    }
+
+
+    [TestMethod]
+    public void SomeTestMethod_FailureOnNull()
+    {
+      var result = Result.Ok<testType>(null);
+
+      result.Ensure(e => e.intValue == 5, "String must be 1")
+            .OnSuccess(e => e.intValue = 2)
+            .OnSuccess(() => Console.WriteLine("Success"))
+            .OnFailure(e => Console.WriteLine(e));
 
       string error = result.Error;
 
